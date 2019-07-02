@@ -1,0 +1,19 @@
+<h3>List Products (Parent)</h3>
+
+<table border="1">
+    <thead><tr><th>Sno</th><th>Product Name</th></tr></thead>
+    <tbody *ngFor="let p of products">
+        <tr><td>{{p.id}}</td><td>{{p.name}}</td>
+        <td>
+            <button (click)="viewProduct(p)">View</button>
+        </td>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="selectedProduct">    
+<app-view-product [product]="selectedProduct"></app-view-product>
+</div>
+
+
+
