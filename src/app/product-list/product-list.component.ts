@@ -38,10 +38,6 @@ export class ProductListComponent implements OnInit,AfterViewInit  {
     console.log('Parent-ngAfterViewInit', this.editProductComponent); 
   }
 
-  ngOnChanges() {
-    alert('Alert from child component, on change in parent component.');
-  }
-
   updateEventNotification(){
     console.log('Parent- got notification');
     console.log('fetch data from db');
