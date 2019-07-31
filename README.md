@@ -1,27 +1,152 @@
-# ParentChildComponentsDemo
+# Parent Child Communication
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.4.
+#### Prerequisites
+* Components
+ * product-list
+ * view-product
+ * edit-product
+ 
+#### Parent Component: ListProductsComponent
+```
+<h3>List Products (Parent)</h3>
 
-## Development server
+<table border="1">
+    <thead><tr><th>Sno</th><th>Product Name</th></tr></thead>
+    <tbody *ngFor="let p of products">
+        <tr><td>{{p.id}}</td><td>{{p.name}}</td>
+        <td>
+            <button (click)="viewProduct(p)">View</button>
+            <button (click)="editProduct(p)">Edit</button>
+        </td>
+        </tr>
+    </tbody>
+</table>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+<div *ngIf="selectedProduct && mode=='VIEW'">    
+<app-view-product [product]="selectedProduct"></app-view-product>
+</div>
 
-## Code scaffolding
+<div *ngIf="selectedProduct && mode=='EDIT'">    
+    <app-edit-product [product]="selectedProduct"  (productChange)="updateEventNotification($event)"></app-edit-product>
+</div>
+```
+```
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { EditProductComponent } from '../edit-product/edit-product.component';
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+@Component({
+  selector: 'app-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.css']
+})
+export class ProductListComponent implements OnInit,AfterViewInit  {
 
-## Build
+  @ViewChild(EditProductComponent, {static: false}) editProductComponent:EditProductComponent;
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+  mode:string;
 
-## Running unit tests
+  constructor() { 
+    console.log('ProductList - constructor called');  
+  }
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+  ngOnInit() {
+    console.log('ProductList - init called');
+  }
 
-## Running end-to-end tests
+  products = [{"id":1,"name":"Lenova"},{"id":2,"name":"Dell"}];
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+  selectedProduct = null;
 
-## Further help
+  viewProduct(product){
+    this.selectedProduct = product;
+    this.mode = "VIEW";
+  }
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+  editProduct(product){
+    this.selectedProduct = product;
+    this.mode = "EDIT";
+  }
+
+  ngAfterViewInit() {
+    console.log('Parent-ngAfterViewInit', this.editProductComponent); 
+  }
+
+  updateEventNotification(){
+    console.log('Parent- got notification');
+    console.log('fetch data from db');
+    this.products = [{"id":1,"name":"Lenova"},{"id":2,"name":"Dell"}];
+  }
+}
+```
+
+#### Edit Product Component ( Child )
+```
+<h3>Edit Product</h3>
+<form #f="ngForm">
+    <table border="1">
+        <tr>
+            <th>Product Id</th>
+            <td> {{product.id}}</td>
+        </tr>
+        <tr>
+            <td>
+                Product Name:
+            </td>
+            <td><input type="text" [(ngModel)]="product.name" name="name"> <br />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button (click)="update(product)">Update</button>
+            </td>
+            <td>
+                <button (click)="close(f)">Close</button>
+            </td>
+        </tr>
+    </table>
+</form>
+```
+```
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+
+import { NgForm } from '@angular/forms';
+import { format } from 'url';
+
+@Component({
+  selector: 'app-edit-product',
+  templateUrl: './edit-product.component.html',
+  styleUrls: ['./edit-product.component.css'],
+  
+})
+export class EditProductComponent implements OnInit {
+
+  @Output() productChange: EventEmitter<string> = new EventEmitter<string>();
+  
+  @Input('product') product: any;
+
+  constructor() {
+
+    console.log('EditProductComponent');
+   }
+
+  ngOnInit() {
+    console.log('EditProductComponent - init' , this.product);
+  }
+
+  update(){
+    console.log('Child - Update Data');
+    this.productChange.emit('Child - Data Updated');
+  }
+
+  close(form:NgForm){
+    console.log('Close');
+    form.reset();
+
+  }
+
+
+
+}
+```
+
+
