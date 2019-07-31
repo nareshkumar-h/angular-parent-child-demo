@@ -11,7 +11,7 @@ import { format } from 'url';
 })
 export class EditProductComponent implements OnInit {
 
-  @Output() productChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() productChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   
   @Input('product') product: any;
 
@@ -26,12 +26,13 @@ export class EditProductComponent implements OnInit {
 
   update(){
     console.log('Child - Update Data');
-    this.productChange.emit('Child - Data Updated');
+    this.productChange.emit(true);
   }
 
   close(form:NgForm){
     console.log('Close');
     form.reset();
+    this.productChange.emit(false);
 
   }
 

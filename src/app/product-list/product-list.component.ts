@@ -6,10 +6,7 @@ import { EditProductComponent } from '../edit-product/edit-product.component';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit,AfterViewInit  {
-
-  @ViewChild(EditProductComponent, {static: false}) editProductComponent:EditProductComponent;
-
+export class ProductListComponent implements OnInit  {
   mode:string;
 
   constructor() { 
@@ -34,13 +31,16 @@ export class ProductListComponent implements OnInit,AfterViewInit  {
     this.mode = "EDIT";
   }
 
-  ngAfterViewInit() {
-    console.log('Parent-ngAfterViewInit', this.editProductComponent); 
-  }
 
-  updateEventNotification(){
+  updateEventNotification(dataModified){
+    console.log('Data from Child', dataModified);
     console.log('Parent- got notification');
-    console.log('fetch data from db');
-    this.products = [{"id":1,"name":"Lenova"},{"id":2,"name":"Dell"}];
+    if (dataModified){
+      console.log('fetch latest data from db');
+      this.products = [{"id":1,"name":"Lenova"},{"id":2,"name":"Dell"}];
+    }
+    else{
+      console.log('No data changed in child component');
+    }
   }
 }
