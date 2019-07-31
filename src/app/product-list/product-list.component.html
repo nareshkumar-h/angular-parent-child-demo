@@ -6,13 +6,18 @@
         <tr><td>{{p.id}}</td><td>{{p.name}}</td>
         <td>
             <button (click)="viewProduct(p)">View</button>
+            <button (click)="editProduct(p)">Edit</button>
         </td>
         </tr>
     </tbody>
 </table>
 
-<div *ngIf="selectedProduct">    
+<div *ngIf="selectedProduct && mode=='VIEW'">    
 <app-view-product [product]="selectedProduct"></app-view-product>
+</div>
+
+<div *ngIf="selectedProduct && mode=='EDIT'">    
+    <app-edit-product [product]="selectedProduct"  (productChange)="updateEventNotification($event)"></app-edit-product>
 </div>
 
 

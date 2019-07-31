@@ -1,0 +1,25 @@
+<h3>Edit Product</h3>
+<form #f="ngForm">
+<table border="1">
+<tr>
+    <th>Product Id</th>
+    <td> {{product.id}}</td>
+</tr>
+<tr>
+    <td>
+Product Name:
+</td>
+<td><input type="text" [(ngModel)]="product.name" name="name"> <br/>
+ </td>
+</tr>
+<tr>
+    <td>
+            <button (click)="update(product)" >Update</button>
+    </td>
+    <td>
+            <button (click)="close(f)" >Close</button>
+    </td>
+</tr>
+</table>
+</form>
+
